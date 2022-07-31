@@ -1,20 +1,20 @@
 version: 2.1
+
 orbs:
-  python: circleci/python@2.0.3
-  heroku: circleci/heroku@1.2.6
+  # The python orb contains a set of prepackaged circleci configuration you can use repeatedly in your configurations files
+  # Orb commands and jobs help you with common scripting around a language/tool
+  # so you dont have to copy and paste it everywhere.
+  # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/python
+  python: circleci/python@1.2
 
 jobs:
-  build_and_test: # this can be any name you choose
-    executor: python/default
+  build:
+    docker:
+      - image: cimg/python:3.10.5
     steps:
       - checkout
       - python/install-packages:
           pkg-manager: pip
       - run:
           name: Run tests
-          command: python -m pytest
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - .
-
+          command: pytest --cov=dst tests/
