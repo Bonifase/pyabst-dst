@@ -1,10 +1,20 @@
 version: 2.1
+orbs:
+  python: circleci/python@2.0.3
+  heroku: circleci/heroku@1.2.6
+
 jobs:
-  build:
-    docker:
-      - image: alpine:3.15
+  build_and_test: # this can be any name you choose
+    executor: python/default
     steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
       - run:
-          name: The First Step
-          command: |
-            pytest
+          name: Run tests
+          command: python -m pytest
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+
